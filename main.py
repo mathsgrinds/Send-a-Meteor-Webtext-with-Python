@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 
 def meteor(message="", yournumber="", username="", password="", theirnumber="", headless=True):
+    import time
+    from selenium import webdriver
+    from selenium.common.exceptions import NoSuchElementException
+    from selenium.webdriver.common.keys import Keys
+    try:
+        from pyvirtualdisplay import Display
+    except:
+        pass
     number = yournumber[1:]
     if theirnumber == "":
         theirnumber = yournumber
     theirnumber = theirnumber[1:]
     try:
-        import time
-        from selenium import webdriver
-        try:
-            from pyvirtualdisplay import Display
-        except:
-            pass
         if headless:
             try:
                 display=Display(visible=0,size=(1024,768))
@@ -71,33 +73,49 @@ def meteor(message="", yournumber="", username="", password="", theirnumber="", 
             browser.maximize_window()
         else:
             browser = webdriver.Firefox()
+            browser.maximize_window()
         ###--------------------- START ---------------------###
         browser.get('https://my.meteor.ie/meteor/transactional/login')
         time.sleep(1)
         for usernamefield in browser.find_elements_by_id("username"):
             try:
-                usernamefield.send_keys(username)
+                usernamefield.send_keys(username+"\t")
                 time.sleep(1)
             except:
                 pass
+        time.sleep(1)
         for usernamefield in browser.find_elements_by_id("password"):
             try:
-                usernamefield.send_keys(password+"\n")
+                usernamefield.send_keys(password+"\t")
                 time.sleep(1)
             except:
                 pass
+        time.sleep(1)
+        for submit in browser.find_elements_by_id("submit"):
+            try:
+                submit.click()
+                time.sleep(1)
+            except:
+                pass
+        time.sleep(1)
         browser.get("https://my.meteor.ie/webtext/page/main?msisdn=+353"+number+"#send:")
         time.sleep(10)
-        browser.find_element_by_xpath("//body").send_keys(str("\t\t\t\t\t\t\t\t"+str(message)+"\t"+"0"+theirnumber))
+        browser.find_element_by_xpath("//body").send_keys(str("\t\t\t\t\t\t\t"+str(message)+"\t"+"0"+theirnumber))
+        time.sleep(1)
         browser.find_element_by_link_text("Send").click()
+        time.sleep(1)
         ###---------------------- END ----------------------###
         time.sleep(1)
         browser.close()
-        time.sleep(5)
+        time.sleep(1)
         try:
             display.stop()
         except:
             pass
         return True
     except:
+        try:
+            display.stop()
+        except:
+            pass        
         return False
