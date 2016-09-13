@@ -18,6 +18,3 @@ def meteor(username = "John.Smith@example.com", password = "123456", yournumber 
                 return True
     except:
         return False
-
-### Usage
-### meteor("Your mymeteor username", "Your mymeteor password", "Your phone number", "The recipient's phone number", "The message")
